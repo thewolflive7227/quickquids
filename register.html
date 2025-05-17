@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Quids - Register</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Register</h1>
+        <form id="registerForm">
+            <input type="text" id="fullName" placeholder="Full Name" required>
+            <input type="tel" id="mobile" placeholder="Mobile Number" pattern="[0-9]{10}" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <select id="birthYear" required>
+                <option value="">Select Birth Year</option>
+            </select>
+            <select id="gender" required>
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+            <input type="password" id="password" placeholder="Password" minlength="8" required>
+            <button type="submit">Register</button>
+            <button type="button" id="backBtn">Back</button>
+        </form>
+        <div id="toast" class="toast">Sign up successful! Login with your credentials</div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js"></script>
+    <script src="scripts/register.js"></script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Quids - User Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 id="welcomeMsg"></h1>
+        <div class="loan-options">
+            <h2>Loan Options</h2>
+            <button onclick="showLoanForm('Personal Loan')">Personal Loan (10k-1L)</button>
+            <button onclick="showLoanForm('Credit Limit')">Credit Limit (5k-50k)</button>
+        </div>
+        <div id="loanForm" class="hidden">
+            <h2>Loan Application</h2>
+            <form id="loanApplicationForm">
+                <!-- Multi-step form fields here -->
+                <input type="text" id="aadhaar" placeholder="Aadhaar Number" pattern="[0-9]{12}" required>
+                <input type="text" id="pan" placeholder="PAN" pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" required>
+                <select id="state" required><option value="">Select State</option></select>
+                <select id="city" required><option value="">Select City</option></select>
+                <input type="text" id="pincode" placeholder="Pincode" required>
+                <select id="employmentType" required><option value="">Employment Type</option></select>
+                <select id="loanPurpose" required><option value="">Loan Purpose</option></select>
+                <input type="checkbox" id="consent" required> I consent to credit check
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        <button id="supportBtn">Support</button>
+        <div id="chatSection" class="hidden">
+            <div id="chatMessages"></div>
+            <input type="text" id="chatInput" placeholder="Type your message">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+        <div class="tips">
+            <h3>Financial Tips</h3>
+            <p>"Save regularly to build a financial cushion."</p>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.7.3/firebase-database.js"></script>
+    <script src="scripts/user_dashboard.js"></script>
+</body>
+</html>
