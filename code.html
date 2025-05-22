@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Quids - Business Payments</title>
+    <!-- Using Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Reset and Basic Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: auto;
+            overflow: hidden;
+            padding: 0 20px;
+        }
+
+        h1, h2, h3 {
+            margin-bottom: 1rem;
+            color: #1a535c; /* Dark Teal */
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: #555;
+        }
+
+        a {
+            text-decoration: none;
+            color: #4ecdc4; /* Lighter Teal */
+        }
+
+        .btn {
+            display: inline-block;
+            background: #ff6b6b; /* Coral Red */
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #e65c5c;
+        }
+
+        /* Header */
+        .navbar {
+            background: #fff;
+            color: #1a535c;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #1a535c;
+        }
+
+        .navbar nav ul {
+            list-style: none;
+            display: flex;
+        }
+
+        .navbar nav ul li {
+            margin-left: 20px;
+        }
+
+        .navbar nav ul li a {
+            color: #1a535c;
+            padding: 5px 10px;
+            transition: color 0.3s ease;
+        }
+
+        .navbar nav ul li a:hover, .navbar nav ul li a.active {
+            color: #ff6b6b;
+        }
+
+        /* Hero Section */
+        #hero {
+            background: linear-gradient(rgba(26, 83, 92, 0.7), rgba(26, 83, 92, 0.7)), url('https://via.placeholder.com/1500x700.png?text=Business+Payments+Background') no-repeat center center/cover;
+            color: #fff;
+            padding: 6rem 0;
+            text-align: center;
+        }
+
+        #hero h1 {
+            font-size: 3rem;
+            color: #fff;
+        }
+
+        #hero p {
+            font-size: 1.2rem;
+            color: #f0f0f0;
+            margin-bottom: 2rem;
+        }
+
+        /* Features Section */
+        #features {
+            padding: 4rem 0;
+            background: #fff;
+            text-align: center;
+        }
+        #features h2 {
+             margin-bottom: 2.5rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: #f9f9f9;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .feature-card i {
+            font-size: 2.5rem;
+            color: #4ecdc4; /* Lighter Teal */
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Cashflow Section */
+        #cashflow {
+            padding: 4rem 0;
+            text-align: center;
+            background-color: #e8f5e9; /* Light Greenish */
+        }
+        #cashflow h2 {
+            margin-bottom: 2.5rem;
+        }
+
+        .cashflow-steps {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .cashflow-step {
+            flex-basis: 30%;
+            min-width: 280px;
+            padding: 1.5rem;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        .cashflow-step .step-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            border-radius: 50%;
+            background: #4ecdc4;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        .cashflow-step i {
+            font-size: 2rem;
+            color: #1a535c;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .cashflow-step h3 {
+            font-size: 1.2rem;
+        }
+
+
+        /* About Us / Contact Section */
+        #about-contact {
+            padding: 4rem 0;
+            background: #fff;
+        }
+        #about-contact .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        .about-content, .contact-details {
+            flex: 1;
+            min-width: 300px;
+        }
+        .contact-details ul {
+            list-style: none;
+        }
+        .contact-details ul li {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+        }
+        .contact-details ul li i {
+            color: #4ecdc4;
+            margin-right: 10px;
+            width: 20px; /* for alignment */
+            text-align: center;
+        }
+
+
+        /* CTA Banner */
+        #cta-banner {
+            background: #1a535c; /* Dark Teal */
+            color: #fff;
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        #cta-banner h2 {
+            font-size: 2.2rem;
+            color: #fff;
+            margin-bottom: 0;
+        }
+
+        /* Footer */
+        footer {
+            background: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1.5rem 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar .container {
+                flex-direction: column;
+            }
+            .navbar nav {
+                margin-top: 1rem;
+            }
+            .navbar nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            .navbar nav ul li {
+                margin: 5px 0;
+            }
+
+            #hero h1 {
+                font-size: 2.2rem;
+            }
+            #hero p {
+                font-size: 1rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            .cashflow-steps {
+                flex-direction: column;
+                align-items: center;
+            }
+            .cashflow-step {
+                flex-basis: auto;
+                width: 90%;
+                max-width: 400px;
+            }
+            #about-contact .container {
+                flex-direction: column;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="container">
+            <a href="#" class="logo">Quick Quids</a>
+            <nav>
+                <ul>
+                    <li><a href="#hero" class="active">Home</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#cashflow">Benefits</a></li>
+                    <li><a href="#about-contact">About Us</a></li>
+                    <li><a href="#" class="btn">Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="hero">
+        <div class="container">
+            <h1>One Platform for All Your Business Payments</h1>
+            <p>Streamline your transactions, manage expenses, and improve your cashflow seamlessly.</p>
+            <a href="#" class="btn">Get Started Today</a>
+        </div>
+    </section>
+
+    <section id="features">
+        <div class="container">
+            <h2>Key Features for Your Business</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h3>Education Fees</h3>
+                    <p>Pay your education fees seamlessly and securely. Experience quick transactions.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-home"></i>
+                    <h3>House Rent</h3>
+                    <p>Pay your house or flat rent online instantly. Manage rental payments easily.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-piggy-bank"></i>
+                    <h3>Security Deposit</h3>
+                    <p>Handle security deposits with transparency and ease for rental agreements.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-tools"></i>
+                    <h3>Maintenance</h3>
+                    <p>We provide payment options for transparent property maintenance services.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="cashflow">
+        <div class="container">
+            <h2>Improve Cashflow by 60%</h2>
+            <p>Supplier gets paid instantly. You get up to 45 days credit.</p>
+            <div class="cashflow-steps">
+                <div class="cashflow-step">
+                    <span class="step-number">1</span>
+                    <i class="fas fa-rupee-sign"></i>
+                    <h3>Instant Payment</h3>
+                    <p>All payments instantly credited to your beneficiaries' bank account.</p>
+                </div>
+                <div class="cashflow-step">
+                    <span class="step-number">2</span>
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3>Delay Payables</h3>
+                    <p>Get extra 45 days of credit period for all your business payments.</p>
+                </div>
+                <div class="cashflow-step">
+                    <span class="step-number">3</span>
+                    <i class="fas fa-credit-card"></i>
+                    <h3>Get Credit</h3>
+                    <p>Use your cards to pay anyone, even if they do not have a POS machine.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about-contact">
+        <div class="container">
+            <div class="about-content">
+                <h2>About Quick Quids</h2>
+                <p>Quick Quids is dedicated to simplifying business payments for entrepreneurs and companies of all sizes. We understand the challenges of managing finances and cash flow, and our platform is designed to provide quick, secure, and efficient solutions.</p>
+                <p>Our mission is to empower businesses by providing them with the tools they need to thrive in a fast-paced economic environment. From managing day-to-day expenses to strategic financial planning, Quick Quids is your trusted partner.</p>
+            </div>
+            <div class="contact-details">
+                <h3>Contact Us</h3>
+                <p>Get in touch with us for any queries or support:</p>
+                <ul>
+                    <li><i class="fas fa-phone-alt"></i> Mobile: +91 7043000123</li>
+                    <li><i class="fab fa-whatsapp"></i> WhatsApp: +91 7043000123</li>
+                    <li><i class="fas fa-envelope"></i> Email: admin@quick-quids.com</li>
+                    <!-- You can add an address here if needed -->
+                    <!-- <li><i class="fas fa-map-marker-alt"></i> Address: 123 Business St, Finance City, India</li> -->
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="cta-banner">
+        <div class="container">
+            <h2>All Modes of Payment. One Platform.</h2>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Quick Quids. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Simple script for active navigation link (optional)
+        // You can add more JS here if needed, e.g., for a mobile menu toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.navbar nav ul li a');
+            
+            // Smooth scroll for anchor links
+            navLinks.forEach(link => {
+                if (link.href.includes('#') && !link.classList.contains('btn')) { // Check if it's an anchor and not a button
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const targetId = this.getAttribute('href');
+                        const targetElement = document.querySelector(targetId);
+                        if (targetElement) {
+                            window.scrollTo({
+                                top: targetElement.offsetTop - 70, // Adjust for sticky header
+                                behavior: 'smooth'
+                            });
+                        }
+                        // Remove active class from all
+                        navLinks.forEach(nav => nav.classList.remove('active'));
+                        // Add active class to clicked link
+                        this.classList.add('active');
+                    });
+                }
+            });
+
+            // Set active link based on scroll position
+            window.addEventListener('scroll', () => {
+                let current = '';
+                const sections = document.querySelectorAll('section');
+                const navbarHeight = document.querySelector('.navbar').offsetHeight;
+
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop - navbarHeight - 50; // a bit of offset
+                    if (pageYOffset >= sectionTop) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${current}`) {
+                        link.classList.add('active');
+                    }
+                });
+                 // If at top, Home is active
+                if (pageYOffset < sections[0].offsetTop - navbarHeight - 50) {
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    document.querySelector('.navbar nav ul li a[href="#hero"]').classList.add('active');
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
