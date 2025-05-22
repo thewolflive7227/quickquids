@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Quids - Business Payments (Dark Mode)</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Reset and Basic Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #e0e0e0; /* Light gray for text */
+            background-color: #050a1a; /* Very dark blue fallback */
+            background-image: url('assets/background.gif'); /* Your GIF */
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed; /* Keeps GIF static */
+            position: relative;
+            overflow-x: hidden; /* Prevent horizontal scroll from animations */
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(5, 10, 26, 0.85); /* Dark blue semi-transparent overlay */
+            z-index: -1;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: auto;
+            overflow: hidden; /* Changed from visible to hidden to help contain animations */
+            padding: 0 20px;
+            position: relative; /* Ensure container content is above body::before */
+            z-index: 1;
+        }
+
+        /* Glow Effects & Text Styling */
+        h1, h2, h3, .logo {
+            margin-bottom: 1rem;
+            color: #61dafb; /* Bright cyan/blue for headings */
+            text-shadow: 0 0 5px #61dafb, 0 0 10px #61dafb, 0 0 15px rgba(97, 218, 251, 0.7);
+        }
+
+        p, li, span:not(.step-number):not(.btn) { /* Exclude specific spans to avoid double glow */
+            margin-bottom: 1rem;
+            color: #c0c0c0; /* Slightly lighter gray for paragraphs */
+            text-shadow: 0 0 4px rgba(150, 200, 255, 0.3);
+        }
+
+        a {
+            text-decoration: none;
+            color: #82aaff; /* Lighter blue for links */
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+        }
+        a:hover {
+            color: #ff8fab; /* Pinkish accent on hover */
+            text-shadow: 0 0 6px #ff8fab;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #007bff; /* Brighter Blue */
+            color: #fff;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5), 0 0 15px rgba(0, 123, 255, 0.3);
+        }
+
+        .btn:hover {
+            background: #0056b3; /* Darker blue */
+            transform: translateY(-2px);
+            box-shadow: 0 0 12px rgba(0, 123, 255, 0.7), 0 0 20px rgba(0, 123, 255, 0.5);
+        }
+
+        /* Header */
+        .navbar {
+            background: rgba(10, 20, 40, 0.85); /* Dark, slightly transparent */
+            backdrop-filter: blur(5px); /* Frosted glass effect */
+            color: #e0e0e0;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(97, 218, 251, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar .logo {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .navbar nav ul {
+            list-style: none;
+            display: flex;
+        }
+
+        .navbar nav ul li {
+            margin-left: 25px;
+        }
+
+        .navbar nav ul li a {
+            color: #c0c0c0;
+            padding: 5px 10px;
+            font-weight: 500;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+        }
+
+        .navbar nav ul li a:hover, .navbar nav ul li a.active {
+            color: #61dafb;
+            text-shadow: 0 0 8px #61dafb;
+        }
+
+        /* Hero Section */
+        #hero {
+            color: #fff;
+            padding: 7rem 0;
+            text-align: center;
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        #hero h1 {
+            font-size: 3.5rem;
+            color: #fff;
+            text-shadow: 0 0 8px #61dafb, 0 0 15px #61dafb, 0 0 25px #61dafb;
+            animation: pulseGlow 2s infinite alternate;
+        }
+
+        #hero p {
+            font-size: 1.3rem;
+            color: #e0e0e0;
+            margin-bottom: 2.5rem;
+            max-width: 700px;
+            text-shadow: 0 0 5px rgba(200, 220, 255, 0.5);
+        }
+
+        /* Sections general styling */
+        section {
+            padding: 4rem 0;
+            position: relative; /* For pseudo-elements or absolute positioning within sections */
+        }
+        
+        /* Add a class for scroll animations */
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .scroll-animate.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+
+        /* Features Section */
+        #features {
+            background: rgba(15, 25, 50, 0.7); /* Darker semi-transparent blue */
+            text-align: center;
+        }
+        #features h2 {
+             margin-bottom: 3rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(25, 40, 70, 0.85); /* Dark card background */
+            padding: 2.5rem 2rem;
+            border-radius: 10px;
+            border: 1px solid rgba(97, 218, 251, 0.2);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4), 0 0 15px rgba(97, 218, 251, 0.1) inset;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 25px rgba(97, 218, 251, 0.3) inset, 0 0 20px rgba(97, 218, 251, 0.3);
+        }
+
+        .feature-card i {
+            font-size: 3rem;
+            color: #61dafb; /* Cyan */
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 10px #61dafb;
+        }
+
+        .feature-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.7rem;
+        }
+
+        /* Cashflow Section */
+        #cashflow {
+            text-align: center;
+            background-color: rgba(10, 15, 30, 0.7); /* Very dark semi-transparent */
+        }
+        #cashflow h2 {
+            margin-bottom: 1rem;
+        }
+        #cashflow > .container > p { /* Targeting the main paragraph under h2 */
+             margin-bottom: 3rem;
+             font-size: 1.1rem;
+        }
+
+        .cashflow-steps {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .cashflow-step {
+            flex-basis: 30%;
+            min-width: 280px;
+            padding: 2rem;
+            background: rgba(20, 30, 60, 0.85);
+            border-radius: 10px;
+            border: 1px solid rgba(97, 218, 251, 0.15);
+            box-shadow: 0 3px 15px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .cashflow-step:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 15px rgba(97, 218, 251, 0.2);
+        }
+        .cashflow-step .step-number {
+            display: inline-block;
+            width: 45px;
+            height: 45px;
+            line-height: 45px;
+            border-radius: 50%;
+            background: #61dafb;
+            color: #050a1a; /* Dark text on bright bg */
+            font-weight: bold;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            text-shadow: none; /* Remove parent glow */
+            box-shadow: 0 0 10px #61dafb;
+        }
+        .cashflow-step i {
+            font-size: 2.5rem;
+            color: #82aaff; /* Lighter blue */
+            margin-bottom: 0.8rem;
+            display: block;
+            text-shadow: 0 0 8px #82aaff;
+        }
+        .cashflow-step h3 {
+            font-size: 1.3rem;
+        }
+
+        /* Tech Animation Section (POS & Payment Gateway) */
+        #tech-animation {
+            background: rgba(15, 25, 50, 0.75);
+            text-align: center;
+        }
+        #tech-animation h2 {
+            margin-bottom: 3rem;
+        }
+        .tech-animation-grid {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        .tech-item {
+            background: rgba(25, 40, 70, 0.9);
+            padding: 2.5rem;
+            border-radius: 10px;
+            border: 1px solid rgba(97, 218, 251, 0.2);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+            width: calc(50% - 2rem);
+            min-width: 300px;
+            max-width: 400px;
+        }
+        .tech-item i {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            display: block;
+            color: #61dafb;
+        }
+        .tech-item h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* POS Animation */
+        .pos-animation i {
+            animation: posPulse 2s infinite ease-in-out;
+        }
+        @keyframes posPulse {
+            0%, 100% { transform: scale(1); text-shadow: 0 0 10px #61dafb; }
+            50% { transform: scale(1.1); text-shadow: 0 0 20px #82f7ff, 0 0 30px #82f7ff; }
+        }
+
+        /* Payment Gateway Animation */
+        .gateway-animation i {
+            animation: gatewayShield 2.5s infinite linear;
+        }
+        @keyframes gatewayShield {
+            0% { transform: rotateY(0deg); opacity: 0.7; text-shadow: 0 0 10px #61dafb;}
+            50% { transform: rotateY(180deg); opacity: 1; text-shadow: 0 0 20px #82f7ff, 0 0 30px #82f7ff;}
+            100% { transform: rotateY(360deg); opacity: 0.7; text-shadow: 0 0 10px #61dafb;}
+        }
+
+
+        /* About Us / Contact Section */
+        #about-contact {
+            background: rgba(10, 15, 30, 0.8);
+        }
+        #about-contact .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3rem;
+        }
+        .about-content, .contact-details {
+            flex: 1;
+            min-width: 300px;
+        }
+         .about-content h2, .contact-details h3 {
+            margin-bottom: 1.5rem;
+         }
+        .contact-details ul {
+            list-style: none;
+        }
+        .contact-details ul li {
+            margin-bottom: 1.2rem;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+        }
+        .contact-details ul li i {
+            color: #61dafb;
+            margin-right: 15px;
+            width: 25px; /* for alignment */
+            text-align: center;
+            font-size: 1.3rem;
+            text-shadow: 0 0 8px #61dafb;
+        }
+        .contact-details ul li a {
+            color: #b0cfff; /* Lighter for contact links */
+        }
+        .contact-details ul li a:hover {
+            color: #ff8fab;
+        }
+
+
+        /* CTA Banner */
+        #cta-banner {
+            background: linear-gradient(45deg, #003973, #007bff); /* Gradient blue */
+            color: #fff;
+            padding: 4rem 0;
+            text-align: center;
+            animation: slideInRight 1s ease-out;
+        }
+
+        #cta-banner h2 {
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 0;
+            text-shadow: 0 0 10px rgba(255,255,255,0.8), 0 0 20px rgba(255,255,255,0.5);
+        }
+
+        /* Footer */
+        footer {
+            background: #030610; /* Very Dark */
+            color: #a0a0a0;
+            text-align: center;
+            padding: 2rem 0;
+            border-top: 1px solid rgba(97, 218, 251, 0.1);
+        }
+        footer p {
+            text-shadow: none; /* Remove general p glow for footer */
+            color: #888;
+        }
+
+        /* Keyframe Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes pulseGlow {
+            0% { text-shadow: 0 0 8px #61dafb, 0 0 15px #61dafb, 0 0 25px #61dafb; }
+            100% { text-shadow: 0 0 12px #82f7ff, 0 0 25px #82f7ff, 0 0 40px #82f7ff; }
+        }
+
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar .container {
+                flex-direction: column;
+            }
+            .navbar nav {
+                margin-top: 1rem;
+            }
+            .navbar nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            .navbar nav ul li {
+                margin: 8px 0;
+            }
+
+            #hero h1 {
+                font-size: 2.5rem;
+            }
+            #hero p {
+                font-size: 1.1rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            .cashflow-steps {
+                flex-direction: column;
+                align-items: center;
+            }
+            .cashflow-step {
+                flex-basis: auto;
+                width: 90%;
+                max-width: 400px;
+            }
+             .tech-item {
+                width: 90%;
+            }
+            #about-contact .container {
+                flex-direction: column;
+            }
+            #cta-banner h2 {
+                font-size: 2rem;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="container">
+            <a href="#" class="logo">Quick Quids</a>
+            <nav>
+                <ul>
+                    <li><a href="#hero" class="active">Home</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#cashflow">Benefits</a></li>
+                    <li><a href="#tech-animation">Technology</a></li>
+                    <li><a href="#about-contact">About Us</a></li>
+                    <li><a href="#" class="btn">Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="hero">
+        <div class="container">
+            <h1>One Platform for All Your Business Payments</h1>
+            <p>Streamline your transactions, manage expenses, and improve your cashflow with cutting-edge, secure technology.</p>
+            <a href="#" class="btn">Get Started Today</a>
+        </div>
+    </section>
+
+    <section id="features" class="scroll-animate">
+        <div class="container">
+            <h2>Key Features for Your Business</h2>
+            <div class="features-grid">
+                <div class="feature-card scroll-animate" style="animation-delay: 0.1s;">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h3>Education Fees</h3>
+                    <p>Pay your education fees seamlessly and securely. Experience quick transactions.</p>
+                </div>
+                <div class="feature-card scroll-animate" style="animation-delay: 0.2s;">
+                    <i class="fas fa-home"></i>
+                    <h3>House Rent</h3>
+                    <p>Pay your house or flat rent online instantly. Manage rental payments easily.</p>
+                </div>
+                <div class="feature-card scroll-animate" style="animation-delay: 0.3s;">
+                    <i class="fas fa-piggy-bank"></i>
+                    <h3>Security Deposit</h3>
+                    <p>Handle security deposits with transparency and ease for rental agreements.</p>
+                </div>
+                <div class="feature-card scroll-animate" style="animation-delay: 0.4s;">
+                    <i class="fas fa-tools"></i>
+                    <h3>Maintenance</h3>
+                    <p>We provide payment options for transparent property maintenance services.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="cashflow" class="scroll-animate">
+        <div class="container">
+            <h2>Improve Cashflow by 60%</h2>
+            <p>Supplier gets paid instantly. You get up to 45 days credit.</p>
+            <div class="cashflow-steps">
+                <div class="cashflow-step scroll-animate" style="animation-delay: 0.1s;">
+                    <span class="step-number">1</span>
+                    <i class="fas fa-rupee-sign"></i>
+                    <h3>Instant Payment</h3>
+                    <p>All payments instantly credited to your beneficiaries' bank account.</p>
+                </div>
+                <div class="cashflow-step scroll-animate" style="animation-delay: 0.2s;">
+                    <span class="step-number">2</span>
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3>Delay Payables</h3>
+                    <p>Get extra 45 days of credit period for all your business payments.</p>
+                </div>
+                <div class="cashflow-step scroll-animate" style="animation-delay: 0.3s;">
+                    <span class="step-number">3</span>
+                    <i class="fas fa-credit-card"></i>
+                    <h3>Get Credit</h3>
+                    <p>Use your cards to pay anyone, even if they do not have a POS machine.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="tech-animation" class="scroll-animate">
+        <div class="container">
+            <h2>Secure & Swift Transactions</h2>
+            <p style="max-width: 700px; margin-left:auto; margin-right:auto; margin-bottom: 3rem;">Experience the power of our advanced POS solutions and robust payment gateway technology.</p>
+            <div class="tech-animation-grid">
+                <div class="tech-item pos-animation scroll-animate" style="animation-delay: 0.1s;">
+                    <i class="fas fa-cash-register"></i>
+                    <h3>POS Solutions</h3>
+                    <p>Seamless POS integration for all your devices, making in-person transactions a breeze.</p>
+                </div>
+                <div class="tech-item gateway-animation scroll-animate" style="animation-delay: 0.2s;">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Payment Gateway</h3>
+                    <p>Robust and secure payment gateway ensuring your online transactions are protected.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about-contact" class="scroll-animate">
+        <div class="container">
+            <div class="about-content scroll-animate" style="animation-delay: 0.1s;">
+                <h2>About Quick Quids</h2>
+                <p>Quick Quids is dedicated to revolutionizing business payments with a secure, fast, and user-friendly platform. We empower businesses by simplifying financial operations and enhancing cash flow management in today's dynamic digital economy.</p>
+                <p>Our mission is to be your trusted partner, providing innovative tools and unwavering support to help your business thrive and achieve its financial goals efficiently.</p>
+            </div>
+            <div class="contact-details scroll-animate" style="animation-delay: 0.2s;">
+                <h3>Contact Us</h3>
+                <p>Get in touch with us for any queries or support:</p>
+                <ul>
+                    <li><i class="fas fa-phone-alt"></i> Mobile: <a href="tel:+917043000123">+91 7043000123</a></li>
+                    <li><i class="fab fa-whatsapp"></i> WhatsApp: <a href="https://wa.me/917043000123" target="_blank">+91 7043000123</a></li>
+                    <li><i class="fas fa-envelope"></i> Email: <a href="mailto:admin@quick-quids.com">admin@quick-quids.com</a></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="cta-banner">
+        <div class="container">
+            <h2>All Modes of Payment. One Platform. Effortlessly.</h2>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Quick Quids. All Rights Reserved. Designed with <i class="fas fa-bolt" style="color: #61dafb;"></i> Power.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Smooth scroll for anchor links & active nav state
+            const navLinks = document.querySelectorAll('.navbar nav ul li a');
+            const navbarHeight = document.querySelector('.navbar').offsetHeight;
+
+            navLinks.forEach(link => {
+                if (link.href.includes('#') && !link.classList.contains('btn')) {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const targetId = this.getAttribute('href');
+                        const targetElement = document.querySelector(targetId);
+                        if (targetElement) {
+                            window.scrollTo({
+                                top: targetElement.offsetTop - navbarHeight + 1, // +1 for precise active state
+                                behavior: 'smooth'
+                            });
+                        }
+                    });
+                }
+            });
+
+            // Set active link based on scroll position
+            const sections = document.querySelectorAll('section');
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - navbarHeight - 50) { // Adjusted offset
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${current}`) {
+                        link.classList.add('active');
+                    }
+                });
+                // If at top, Home is active, or if no section is 'current' yet
+                if (!current && pageYOffset < sections[0].offsetTop - navbarHeight - 50) {
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    const homeLink = document.querySelector('.navbar nav ul li a[href="#hero"]');
+                    if (homeLink) homeLink.classList.add('active');
+                } else if (!current && sections.length > 0) { // Fallback to home if current is empty but scrolled past top
+                     const homeLink = document.querySelector('.navbar nav ul li a[href="#hero"]');
+                     if (homeLink) homeLink.classList.add('active');
+                }
+            });
+            
+            // Trigger initial active state check
+            window.dispatchEvent(new Event('scroll'));
+
+
+            // Scroll-triggered animations
+            const animatedElements = document.querySelectorAll('.scroll-animate');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        // Optional: stop observing after first animation to prevent re-triggering
+                        // observer.unobserve(entry.target); 
+                    } else {
+                        // Optional: remove class if you want animation to re-trigger on scroll up then down
+                        // entry.target.classList.remove('is-visible');
+                    }
+                });
+            }, {
+                threshold: 0.1 // Trigger when 10% of element is visible
+            });
+
+            animatedElements.forEach(el => {
+                observer.observe(el);
+            });
+
+        });
+    </script>
+
+</body>
+</html>
