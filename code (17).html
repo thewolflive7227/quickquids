@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick-Quids</title>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Reset and Basic Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            line-height: 1.7;
+            color: #333;
+            background-color: #f4f7f6; /* Fallback */
+            background-image: url('assets/background.png'); /* Your PNG background */
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before { /* Light overlay for background image readability */
+            content: "";
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(250, 250, 250, 0.93); /* Light overlay */
+            z-index: -1;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1170px;
+            margin: auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1, h2, h3 {
+            margin-bottom: 1.2rem;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        h1 { font-size: 2.8rem; margin-bottom: 1.5rem; }
+        h2 { font-size: 2.2rem; margin-bottom: 2rem; text-align: center;}
+        h3 { font-size: 1.5rem; color: #34495e; }
+
+        p {
+            margin-bottom: 1rem;
+            color: #555;
+            font-size: 1.05rem;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+            transition: color 0.3s ease;
+        }
+        a:hover {
+            color: #0056b3;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #007bff;
+            color: #fff;
+            padding: 12px 28px;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+            text-align: center;
+        }
+        .btn:hover {
+            background: #0056b3;
+            border-color: #0056b3;
+            transform: translateY(-2px);
+        }
+        .btn-outline {
+            background: transparent;
+            color: #007bff;
+            border: 1px solid #007bff;
+        }
+        .btn-outline:hover {
+            background: #007bff;
+            color: #fff;
+        }
+
+        /* Header */
+        .navbar {
+            background: #fff;
+            color: #333;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #e0e0e0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .navbar .container { display: flex; justify-content: space-between; align-items: center; }
+        .navbar .logo-container { display: flex; align-items: center; color: #007bff; text-decoration: none; }
+        .navbar .logo-img { height: 40px; margin-right: 10px; }
+        .navbar .logo-text { font-size: 1.8rem; font-weight: 700; }
+
+        .navbar nav ul { list-style: none; display: flex; align-items: center;}
+        .navbar nav ul li { margin-left: 25px; }
+        .navbar nav ul li a { color: #333; padding: 8px 12px; font-weight: 500; border-radius: 4px; transition: background-color 0.2s ease, color 0.2s ease; }
+        .navbar nav ul li a:hover, .navbar nav ul li a.active { color: #007bff; background-color: #e9f4ff;}
+        .navbar nav .btn { padding: 8px 18px; margin-left: 15px; }
+        
+        .menu-toggle { display: none; font-size: 1.5rem; cursor: pointer; color: #333; }
+
+
+        /* Hero Section */
+        #hero { padding: 6rem 0; text-align: center; min-height: 70vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        #hero h1 { color: #2c3e50; max-width: 800px; margin: 0 auto 1.5rem auto; }
+        #hero .lead { font-size: 1.25rem; color: #555; margin-bottom: 2.5rem; max-width: 700px; margin: 0 auto 2.5rem auto; }
+        #hero .btn { margin: 0.5rem; }
+
+        section { padding: 5rem 0; }
+        section:nth-of-type(even) { background-color: rgba(255, 255, 255, 0.75); }
+        .scroll-animate { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .scroll-animate.is-visible { opacity: 1; transform: translateY(0); }
+
+        @keyframes flipIcon { 0%, 100% { transform: perspective(600px) rotateY(0deg); } 50% { transform: perspective(600px) rotateY(360deg); } }
+        .flipping-icon { display: inline-block; animation: flipIcon 10s linear infinite; font-size: 2.8rem; margin-bottom: 1.5rem; }
+
+        #solution { text-align: center; }
+        .solution-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2.5rem; margin-top: 2rem; }
+        .solution-item { background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.07); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .solution-item:hover { transform: translateY(-5px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+        .solution-item .flipping-icon { font-size: 2.5rem; } .solution-item h3 { margin-top: 0.5rem; }
+        #solution .fa-id-card { color: #17a2b8; } #solution .fa-users { color: #28a745; } #solution .fa-hand-holding-dollar { color: #ffc107; }
+
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+        .service-card { background: #fff; padding: 2.5rem 2rem; border-radius: 8px; border: 1px solid #e0e0e0; text-align: center; transition: box-shadow 0.3s ease; }
+        .service-card:hover { box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        .service-card .flipping-icon { font-size: 3rem; } .service-card h3 { font-size: 1.3rem; margin-top: 0.5rem; }
+        .service-card .fa-money-check-dollar { color: #007bff; } .service-card .fa-chart-line { color: #6f42c1; }
+        .service-card .fa-file-invoice-dollar { color: #fd7e14; } .service-card .fa-mobile-screen-button { color: #20c997; }
+
+        #app-cta { background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); color: #fff; padding: 4rem 0; text-align: center; }
+        #app-cta h2, #app-cta p { color: #fff; } #app-cta h2 { margin-bottom: 1rem;}
+        #app-cta p { font-size: 1.15rem; max-width: 650px; margin: 0 auto 2rem auto; }
+        /* Updated button style for app download */
+        #app-cta .btn-download-app { 
+            background-color: #fff; color: #007bff; border-color:#fff; 
+            font-weight: bold; padding: 14px 32px;
+        }
+        #app-cta .btn-download-app:hover { background-color: #e9ecef; color: #0056b3;}
+
+
+        #about-contact .container-flex { display: flex; flex-wrap: wrap; gap: 3rem; align-items: flex-start;}
+        .about-content, .contact-map-group { flex: 1; min-width: 300px; }
+        .contact-details { margin-bottom: 2rem; }
+        .about-content h3, .contact-details h3, .map-container h3 { margin-bottom: 1.5rem; text-align: left; }
+        .contact-details ul { list-style: none; padding-left: 0; }
+        .contact-details ul li { margin-bottom: 1.2rem; font-size: 1.1rem; display: flex; align-items: center; }
+        .contact-details ul li .flipping-icon { font-size: 1.5rem; margin-right: 15px; margin-bottom: 0; width: 25px; text-align: center; }
+        #about-contact .fa-phone-alt { color: #28a745; } #about-contact .fa-whatsapp { color: #25D366; }
+        #about-contact .fa-envelope { color: #17a2b8; } #about-contact .fa-map-marker-alt { color: #dc3545; }
+        .map-container iframe { width: 100%; height: 350px; border: 0; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+
+        footer { background: #2c3e50; color: #bdc3c7; text-align: center; padding: 2.5rem 0; }
+        footer p { color: #bdc3c7; margin-bottom: 0.5rem; font-size: 0.95rem; }
+        footer a { color: #ecf0f1; } footer a:hover { color: #007bff; }
+
+        /* Responsive Navigation */
+        @media (max-width: 992px) {
+            .navbar nav ul {
+                display: none; 
+                flex-direction: column; width: 100%;
+                background-color: #fff; position: absolute;
+                top: 65px; /* Adjust based on navbar height */
+                left: 0; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                padding: 10px 0;
+            }
+            .navbar nav ul.active { display: flex; } 
+            .navbar nav ul li { margin-left: 0; width: 100%; text-align: center; }
+            .navbar nav ul li a { display: block; padding: 12px 20px; border-bottom: 1px solid #f0f0f0; }
+            .navbar nav ul li:last-child a { border-bottom: none; }
+            .navbar nav .btn { margin: 10px auto; width: 80%; }
+            .menu-toggle { display: block; }
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 2.4rem; } h2 { font-size: 1.9rem; }
+            .navbar .logo-text { font-size: 1.6rem; } .navbar .logo-img { height: 35px; }
+            #hero { padding: 4rem 0; min-height: auto; }
+            #hero h1 { font-size: 2rem; } #hero .lead { font-size: 1.1rem; }
+            section { padding: 3rem 0; } h2 { font-size: 1.7rem; }
+            .solution-grid, .services-grid { grid-template-columns: 1fr; }
+            .flipping-icon { font-size: 2.2rem; }
+            .service-card .flipping-icon { font-size: 2.5rem; }
+            .contact-details ul li .flipping-icon { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="container">
+            <a href="#hero" class="logo-container">
+                <img src="assets/logo.png" alt="Quick-Quids Logo" class="logo-img">
+                <span class="logo-text">Quick-Quids</span>
+            </a>
+            <div class="menu-toggle" id="mobile-menu">
+                <i class="fas fa-bars"></i>
+            </div>
+            <nav id="nav-menu">
+                <ul>
+                    <li><a href="#hero" class="nav-link active">Home</a></li>
+                    <li><a href="#solution" class="nav-link">Our Solution</a></li>
+                    <li><a href="#services" class="nav-link">Services</a></li>
+                    <li><a href="#app-cta" class="nav-link">Our App</a></li>
+                    <li><a href="#about-contact" class="nav-link">Contact</a></li>
+                    <li><a href="#" class="btn btn-outline">Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero">
+            <div class="container">
+                <h1 class="scroll-animate">Simplify Your Collections, Amplify Your Business with Quick-Quids</h1>
+                <p class="lead scroll-animate" style="animation-delay: 0.1s;">
+                    Effortlessly collect payments from your vendors, students, or donors. Manage expenses and bill payments all in one place.
+                    Focus on what you do best, let Quick-Quids handle the rest.
+                </p>
+                <div class="scroll-animate" style="animation-delay: 0.2s;">
+                    <a href="#solution" class="btn">Learn How It Works</a>
+                    <a href="https://drive.google.com/file/d/1sscCjqwgzm_rySmtcmyFad4M742EmzbM/view?usp=drive_link" class="btn btn-outline" target="_blank">Download Sample App</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="solution" class="scroll-animate">
+            <div class="container">
+                <h2>Your Dedicated Partner for Seamless Payment Collections</h2>
+                <p style="text-align:center; max-width: 800px; margin: 0 auto 2.5rem auto;">
+                    Quick-Quids provides a unique business ID, empowering you to streamline payment collections from various sources. Whether it's rent, fees, or donations, we make it simple and efficient.
+                </p>
+                <div class="solution-grid">
+                    <div class="solution-item scroll-animate" style="animation-delay: 0.1s;">
+                        <i class="fas fa-id-card flipping-icon"></i><h3>Unique Business ID</h3>
+                        <p>Receive your dedicated Quick-Quids ID to easily identify your business and facilitate hassle-free collections.</p>
+                    </div>
+                    <div class="solution-item scroll-animate" style="animation-delay: 0.2s;">
+                        <i class="fas fa-users flipping-icon"></i><h3>Vendor & Customer Payments</h3>
+                        <p>Ideal for businesses like car rentals, tuition classes, schools, or any service requiring regular vendor or customer payments.</p>
+                    </div>
+                    <div class="solution-item scroll-animate" style="animation-delay: 0.3s;">
+                        <i class="fas fa-hand-holding-dollar flipping-icon"></i><h3>Donation Collections</h3>
+                        <p>Simplify your fundraising efforts by providing an easy and secure way for donors to contribute to your cause.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="services" class="scroll-animate">
+            <div class="container">
+                <h2>All Your Financial Tools, Under One Roof</h2>
+                <p style="text-align:center; max-width: 800px; margin: 0 auto 2.5rem auto;">
+                    Beyond collections, Quick-Quids offers a comprehensive suite of financial management services through our intuitive website and powerful mobile app.
+                </p>
+                <div class="services-grid">
+                    <div class="service-card scroll-animate" style="animation-delay: 0.1s;">
+                        <i class="fas fa-money-check-dollar flipping-icon"></i><h3>Effortless Collections</h3>
+                        <p>Utilize your Quick-Quids ID and our app to collect payments seamlessly from anywhere, anytime.</p>
+                    </div>
+                    <div class="service-card scroll-animate" style="animation-delay: 0.2s;">
+                        <i class="fas fa-chart-line flipping-icon"></i><h3>Expense Management</h3>
+                        <p>Track and manage all your business expenses directly on our platform for better financial oversight.</p>
+                    </div>
+                    <div class="service-card scroll-animate" style="animation-delay: 0.3s;">
+                        <i class="fas fa-file-invoice-dollar flipping-icon"></i><h3>Bill Payments & BBPS</h3>
+                        <p>Pay your utility bills, credit card bills, and access BBPS services conveniently through our app and website.</p>
+                    </div>
+                    <div class="service-card scroll-animate" style="animation-delay: 0.4s;">
+                        <i class="fas fa-mobile-screen-button flipping-icon"></i><h3>Money Transfer & More</h3>
+                        <p>Securely transfer money and access a range of other financial services with our versatile mobile application.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="app-cta" class="scroll-animate">
+            <div class="container">
+                <h2>Take Control with the Quick-Quids Mobile App</h2>
+                <p>Manage collections, expenses, bill payments, and transfers on the go. Our user-friendly app brings all the power of Quick-Quids to your fingertips.</p>
+                <a href="https://drive.google.com/file/d/1sscCjqwgzm_rySmtcmyFad4M742EmzbM/view?usp=drive_link" class="btn btn-download-app" target="_blank">Download The App</a>
+            </div>
+        </section>
+
+        <section id="about-contact" class="scroll-animate">
+            <div class="container">
+                 <h2 style="margin-bottom: 3rem;">About Us & Contact</h2>
+                <div class="container-flex">
+                    <div class="about-content scroll-animate" style="animation-delay: 0.1s;">
+                        <h3>About Quick-Quids</h3>
+                        <p>At Quick-Quids, we're passionate about simplifying financial operations for businesses of all sizes. We understand the challenges of managing collections and expenses, which is why we've built a comprehensive, professional platform to empower you.</p>
+                        <p>Our mission is to provide secure, efficient, and user-friendly tools that allow you to focus on growth while we handle the complexities of your financial transactions.</p>
+                    </div>
+                    <div class="contact-map-group scroll-animate" style="animation-delay: 0.2s;">
+                        <div class="contact-details">
+                            <h3>Contact Information</h3>
+                            <ul>
+                                <li><i class="fas fa-phone-alt flipping-icon"></i> Mobile: <a href="tel:+917227007227">+91 72270-07227</a></li>
+                                <li><i class="fab fa-whatsapp flipping-icon"></i> WhatsApp: <a href="https://wa.me/917227007227" target="_blank">+91 72270-07227</a></li>
+                                <li><i class="fas fa-envelope flipping-icon"></i> Email: <a href="mailto:admin@quick-quids.com">admin@quick-quids.com</a></li>
+                                <li style="align-items: flex-start;">
+                                    <i class="fas fa-map-marker-alt flipping-icon" style="margin-top: 5px;"></i> 
+                                    <div>
+                                        <strong>Office Address:</strong><br>
+                                        "SkyFall", Plot No. 88/2<br>
+                                        SIDDHIVINAYAK PARK -2<br>
+                                        Near Siddh Party Plot,<br>
+                                        Movaiya - 360110
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="map-container">
+                            <h3>Our Location</h3>
+                            <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3683.020777750909!2d70.5964700750808!3d22.445959979670318!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjLCsDI2JzQ1LjQiTiA3MMKwMzUnNTYuNiJF!5e0!3m2!1sen!2sin!4v1670000000000!5m2!1sen!2sin"
+                                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                            </iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 My Booking Technologies Pvt Ltd. All Rights Reserved.</p>
+            <p>Your Professional Partner for Smart Business Payments.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuToggle = document.getElementById('mobile-menu');
+            const navMenu = document.getElementById('nav-menu').querySelector('ul');
+            const navLinks = document.querySelectorAll('#nav-menu .nav-link'); // Target only main nav links for scroll
+            const navbarHeight = document.querySelector('.navbar').offsetHeight;
+
+            // Toggle mobile menu
+            mobileMenuToggle.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+            });
+
+            // Smooth scroll and active link for main nav links
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // Check if the link is an anchor for the current page
+                    if (this.getAttribute('href').startsWith('#')) {
+                        e.preventDefault();
+                        const targetId = this.getAttribute('href');
+                        const targetElement = document.querySelector(targetId);
+                        if (targetElement) {
+                            window.scrollTo({
+                                top: targetElement.offsetTop - navbarHeight + 1,
+                                behavior: 'smooth'
+                            });
+                        }
+                        // Remove active class from all and add to clicked one
+                        navLinks.forEach(nav => nav.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        // Close mobile menu after click
+                        if (navMenu.classList.contains('active')) {
+                            navMenu.classList.remove('active');
+                        }
+                    }
+                    // If it's not an anchor link (e.g., login or external link), let default behavior happen
+                });
+            });
+            
+            // Active link highlighting on scroll
+            const sections = document.querySelectorAll('main section'); // Only sections in main content
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - navbarHeight - 150) { // Adjust offset as needed
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                let foundActive = false;
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${current}`) {
+                        link.classList.add('active');
+                        foundActive = true;
+                    }
+                });
+                // If no section is current (e.g., at the very top), make Home active
+                if (!foundActive && pageYOffset < (sections.length > 0 ? sections[0].offsetTop - navbarHeight - 50 : 500)) {
+                     const homeLink = document.querySelector('.navbar nav ul li a[href="#hero"]');
+                     if (homeLink) homeLink.classList.add('active');
+                }
+            });
+            window.dispatchEvent(new Event('scroll')); // Initial check
+
+            // Scroll animations
+            const animatedElements = document.querySelectorAll('.scroll-animate');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            animatedElements.forEach(el => { observer.observe(el); });
+        });
+    </script>
+
+</body>
+</html>
